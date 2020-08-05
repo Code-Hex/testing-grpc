@@ -25,39 +25,39 @@ func codeErr(code codes.Code) error {
 	return status.Error(code, code.String())
 }
 
-func convertToCode(c test.Code) error {
+func convertToCode(c test.StatusGetRequest_Code) error {
 	switch c {
-	case test.Code_CANCELED:
+	case test.StatusGetRequest_CANCELED:
 		return codeErr(codes.Canceled)
-	case test.Code_UNKNOWN:
+	case test.StatusGetRequest_UNKNOWN:
 		return codeErr(codes.Unknown)
-	case test.Code_INVALIDARGUMENT:
+	case test.StatusGetRequest_INVALIDARGUMENT:
 		return codeErr(codes.InvalidArgument)
-	case test.Code_DEADLINE_EXCEEDED:
+	case test.StatusGetRequest_DEADLINE_EXCEEDED:
 		return codeErr(codes.DeadlineExceeded)
-	case test.Code_NOT_FOUND:
+	case test.StatusGetRequest_NOT_FOUND:
 		return codeErr(codes.NotFound)
-	case test.Code_ALREADY_EXISTS:
+	case test.StatusGetRequest_ALREADY_EXISTS:
 		return codeErr(codes.AlreadyExists)
-	case test.Code_PERMISSION_DENIED:
+	case test.StatusGetRequest_PERMISSION_DENIED:
 		return codeErr(codes.PermissionDenied)
-	case test.Code_RESOURCE_EXHAUSTED:
+	case test.StatusGetRequest_RESOURCE_EXHAUSTED:
 		return codeErr(codes.ResourceExhausted)
-	case test.Code_FAILED_PRECONDITION:
+	case test.StatusGetRequest_FAILED_PRECONDITION:
 		return codeErr(codes.FailedPrecondition)
-	case test.Code_ABORTED:
+	case test.StatusGetRequest_ABORTED:
 		return codeErr(codes.Aborted)
-	case test.Code_OUT_OF_RANGE:
+	case test.StatusGetRequest_OUT_OF_RANGE:
 		return codeErr(codes.OutOfRange)
-	case test.Code_UNIMPLEMENTED:
+	case test.StatusGetRequest_UNIMPLEMENTED:
 		return codeErr(codes.Unimplemented)
-	case test.Code_INTERNAL:
+	case test.StatusGetRequest_INTERNAL:
 		return codeErr(codes.Internal)
-	case test.Code_UNAVAILABLE:
+	case test.StatusGetRequest_UNAVAILABLE:
 		return codeErr(codes.Unavailable)
-	case test.Code_DATALOSS:
+	case test.StatusGetRequest_DATALOSS:
 		return codeErr(codes.DataLoss)
-	case test.Code_UNAUTHENTICATED:
+	case test.StatusGetRequest_UNAUTHENTICATED:
 		return codeErr(codes.Unauthenticated)
 	}
 	return nil

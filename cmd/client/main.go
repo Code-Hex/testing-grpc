@@ -22,24 +22,24 @@ func main() {
 	}
 }
 
-var statuses = []test.Code{
-	test.Code_OK,
-	test.Code_CANCELED,
-	test.Code_UNKNOWN,
-	test.Code_INVALIDARGUMENT,
-	test.Code_DEADLINE_EXCEEDED,
-	test.Code_NOT_FOUND,
-	test.Code_ALREADY_EXISTS,
-	test.Code_PERMISSION_DENIED,
-	test.Code_RESOURCE_EXHAUSTED,
-	test.Code_FAILED_PRECONDITION,
-	test.Code_ABORTED,
-	test.Code_OUT_OF_RANGE,
-	test.Code_UNIMPLEMENTED,
-	test.Code_INTERNAL,
-	test.Code_UNAVAILABLE,
-	test.Code_DATALOSS,
-	test.Code_UNAUTHENTICATED,
+var statuses = []test.StatusGetRequest_Code{
+	test.StatusGetRequest_OK,
+	test.StatusGetRequest_CANCELED,
+	test.StatusGetRequest_UNKNOWN,
+	test.StatusGetRequest_INVALIDARGUMENT,
+	test.StatusGetRequest_DEADLINE_EXCEEDED,
+	test.StatusGetRequest_NOT_FOUND,
+	test.StatusGetRequest_ALREADY_EXISTS,
+	test.StatusGetRequest_PERMISSION_DENIED,
+	test.StatusGetRequest_RESOURCE_EXHAUSTED,
+	test.StatusGetRequest_FAILED_PRECONDITION,
+	test.StatusGetRequest_ABORTED,
+	test.StatusGetRequest_OUT_OF_RANGE,
+	test.StatusGetRequest_UNIMPLEMENTED,
+	test.StatusGetRequest_INTERNAL,
+	test.StatusGetRequest_UNAVAILABLE,
+	test.StatusGetRequest_DATALOSS,
+	test.StatusGetRequest_UNAUTHENTICATED,
 }
 
 func run(ctx context.Context) error {
