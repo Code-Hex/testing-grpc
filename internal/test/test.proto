@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package test;
+
+option go_package = "github.com/Code-Hex/testing-grpc/internal/test;test";
+
+service Status {
+  rpc Get(GetRequest) returns (GetResponse);
+}
+
+enum Code {
+  OK = 0;
+  CANCELED = 1;
+  UNKNOWN = 2;
+  INVALIDARGUMENT = 3;
+  DEADLINE_EXCEEDED = 4;
+  NOT_FOUND = 5;
+  ALREADY_EXISTS = 6;
+  PERMISSION_DENIED = 7;
+  RESOURCE_EXHAUSTED = 8;
+  FAILED_PRECONDITION = 9;
+  ABORTED = 10;
+  OUT_OF_RANGE = 11;
+  UNIMPLEMENTED = 12;
+  INTERNAL = 13;
+  UNAVAILABLE = 14;
+  DATALOSS = 15;
+  UNAUTHENTICATED = 16;
+}
+
+message GetRequest {
+  Code code = 1;
+}
+
+message GetResponse {
+  string msg = 1;
+}
