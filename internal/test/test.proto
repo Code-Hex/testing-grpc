@@ -5,7 +5,7 @@ package test;
 option go_package = "github.com/Code-Hex/testing-grpc/internal/test;test";
 
 service Status {
-  rpc Get(GetRequest) returns (GetResponse);
+  rpc Get(StatusGetRequest) returns (StatusGetResponse);
 }
 
 enum Code {
@@ -28,10 +28,10 @@ enum Code {
   UNAUTHENTICATED = 16;
 }
 
-message GetRequest {
+message StatusGetRequest {
   Code code = 1;
 }
 
-message GetResponse {
+message StatusGetResponse {
   string msg = 1;
 }

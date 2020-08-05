@@ -76,7 +76,7 @@ LOOP:
 			return errors.WithStack(err)
 		}
 
-		req := &test.GetRequest{
+		req := &test.StatusGetRequest{
 			Code: statuses[idx],
 		}
 		resp, err := statusClient.Get(ctx, req)

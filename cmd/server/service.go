@@ -12,11 +12,13 @@ var _ test.StatusServer = (*Status)(nil)
 
 type Status struct{}
 
-func (s *Status) Get(ctx context.Context, req *test.GetRequest) (*test.GetResponse, error) {
+func (s *Status) Get(ctx context.Context, req *test.StatusGetRequest) (*test.StatusGetResponse, error) {
 	if err := convertToCode(req.Code); err != nil {
 		return nil, err
 	}
-	return &test.GetResponse{Msg: "Hello, World"}, nil
+	return &test.StatusGetResponse{
+		Msg: "Hello, World",
+	}, nil
 }
 
 func codeErr(code codes.Code) error {
