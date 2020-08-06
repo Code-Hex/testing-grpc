@@ -52,7 +52,6 @@ message DetailGetRequest {
     RESOURCE_INFO = 8;
     HELP = 9;
     LOCALIZED_MESSAGE = 10;
-
     COMBINED_ALL = 20;
   }
   Code code = 1;
@@ -60,4 +59,18 @@ message DetailGetRequest {
 
 message DetailGetResponse {
   string msg = 1;
+}
+
+service Metadata {
+  rpc Get(MetadataGetRequest) returns (MetadataGetResponse);
+}
+
+message MetadataGetRequest {}
+
+message MetadataGetResponse {
+  message Entry {
+    string key = 1;
+    repeated string value = 2;
+  }
+  repeated Entry metadata = 1;
 }

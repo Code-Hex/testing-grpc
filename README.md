@@ -18,4 +18,10 @@ $ ./bin/client
 
 If you want to change port, you can change the environment variable of `PORT`. and you can use `.env` file :D
 
+## supported
 
+- [x] gRPC status
+- [x] gRPC error details
+- [x] gRPC metadata
+- [ ] gRPC interceptor
+- [ ] gRPC stats

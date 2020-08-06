@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/Code-Hex/testing-grpc/internal/testing"
@@ -16,6 +17,7 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/metadata"
 	rpb "google.golang.org/grpc/reflection/grpc_reflection_v1alpha"
 	"google.golang.org/grpc/status"
 
@@ -50,8 +52,9 @@ func run(ctx context.Context) error {
 	}
 
 	client := &Client{
-		StatusClient: testing.NewStatusClient(conn),
-		DetailClient: testing.NewDetailClient(conn),
+		StatusClient:   testing.NewStatusClient(conn),
+		DetailClient:   testing.NewDetailClient(conn),
+		MetadataClient: testing.NewMetadataClient(conn),
 	}
 	reflectClient := newServerReflectionClient(ctx, conn)
 
@@ -98,6 +101,10 @@ LOOP:
 			if err := client.runDetailClient(ctx); err != nil {
 				return err
 			}
+		case "testing.Metadata":
+			if err := client.runMetadataClient(ctx); err != nil {
+				return err
+			}
 		default:
 			continue LOOP
 		}
@@ -110,8 +117,9 @@ LOOP:
 }
 
 type Client struct {
-	StatusClient testing.StatusClient
-	DetailClient testing.DetailClient
+	StatusClient   testing.StatusClient
+	DetailClient   testing.DetailClient
+	MetadataClient testing.MetadataClient
 }
 
 var statuses = []testing.StatusGetRequest_Code{
@@ -185,6 +193,30 @@ func (c *Client) runDetailClient(ctx context.Context) error {
 		Code: details[idx],
 	}
 	resp, err := c.DetailClient.Get(ctx, req)
+	if err != nil {
+		loggingDetails(err)
+	} else {
+		log.Info().Interface("response", resp).Msg("success")
+	}
+	return nil
+}
+
+func (c *Client) runMetadataClient(ctx context.Context) error {
+	md := make([]string, 0)
+	// https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#sending-metadata
+	for {
+		key := prompter.Prompt("key", "default-key")
+		value := prompter.Prompt("values (Become an array by comma-separated)", "default-value")
+		vals := strings.Split(value, ",")
+		for _, val := range vals {
+			md = append(md, key, val)
+		}
+		if !prompter.YN("metadata continue?", true) {
+			break
+		}
+	}
+	ctx = metadata.AppendToOutgoingContext(ctx, md...)
+	resp, err := c.MetadataClient.Get(ctx, &testing.MetadataGetRequest{})
 	if err != nil {
 		loggingDetails(err)
 	} else {
