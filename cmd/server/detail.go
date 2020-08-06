@@ -13,64 +13,8 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
-
-var _ testing.StatusServer = (*Status)(nil)
-
-type Status struct{}
-
-func (s *Status) Get(ctx context.Context, req *testing.StatusGetRequest) (*testing.StatusGetResponse, error) {
-	if err := convertToCode(req.Code); err != nil {
-		return nil, err
-	}
-	return &testing.StatusGetResponse{
-		Msg: "Hello, World",
-	}, nil
-}
-
-func codeErr(code codes.Code) error {
-	return status.Error(code, code.String())
-}
-
-func convertToCode(c testing.StatusGetRequest_Code) error {
-	switch c {
-	case testing.StatusGetRequest_CANCELED:
-		return codeErr(codes.Canceled)
-	case testing.StatusGetRequest_UNKNOWN:
-		return codeErr(codes.Unknown)
-	case testing.StatusGetRequest_INVALIDARGUMENT:
-		return codeErr(codes.InvalidArgument)
-	case testing.StatusGetRequest_DEADLINE_EXCEEDED:
-		return codeErr(codes.DeadlineExceeded)
-	case testing.StatusGetRequest_NOT_FOUND:
-		return codeErr(codes.NotFound)
-	case testing.StatusGetRequest_ALREADY_EXISTS:
-		return codeErr(codes.AlreadyExists)
-	case testing.StatusGetRequest_PERMISSION_DENIED:
-		return codeErr(codes.PermissionDenied)
-	case testing.StatusGetRequest_RESOURCE_EXHAUSTED:
-		return codeErr(codes.ResourceExhausted)
-	case testing.StatusGetRequest_FAILED_PRECONDITION:
-		return codeErr(codes.FailedPrecondition)
-	case testing.StatusGetRequest_ABORTED:
-		return codeErr(codes.Aborted)
-	case testing.StatusGetRequest_OUT_OF_RANGE:
-		return codeErr(codes.OutOfRange)
-	case testing.StatusGetRequest_UNIMPLEMENTED:
-		return codeErr(codes.Unimplemented)
-	case testing.StatusGetRequest_INTERNAL:
-		return codeErr(codes.Internal)
-	case testing.StatusGetRequest_UNAVAILABLE:
-		return codeErr(codes.Unavailable)
-	case testing.StatusGetRequest_DATALOSS:
-		return codeErr(codes.DataLoss)
-	case testing.StatusGetRequest_UNAUTHENTICATED:
-		return codeErr(codes.Unauthenticated)
-	}
-	return nil
-}
 
 var _ testing.DetailServer = (*Detail)(nil)
 
@@ -235,32 +179,4 @@ func makeDetailsErr(code codes.Code, msg string, d ...proto.Message) error {
 		return errors.WithStack(err)
 	}
 	return st.Err()
-}
-
-var _ testing.MetadataServer = (*Metadata)(nil)
-
-type Metadata struct{}
-
-func (m *Metadata) Get(ctx context.Context, req *testing.MetadataGetRequest) (*testing.MetadataGetResponse, error) {
-	// https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#retrieving-metadata-from-context
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Error(codes.NotFound, "metadata is not found")
-	}
-	keys := make([]string, 0, len(md))
-	for key := range md {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-
-	entries := make([]*testing.MetadataGetResponse_Entry, len(keys))
-	for i, key := range keys {
-		entries[i] = &testing.MetadataGetResponse_Entry{
-			Key:   key,
-			Value: md[key],
-		}
-	}
-	return &testing.MetadataGetResponse{
-		Metadata: entries,
-	}, nil
 }
