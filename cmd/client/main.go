@@ -17,6 +17,7 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/metadata"
 	rpb "google.golang.org/grpc/reflection/grpc_reflection_v1alpha"
 	"google.golang.org/grpc/status"
@@ -55,6 +56,8 @@ func run(ctx context.Context) error {
 		StatusClient:   testing.NewStatusClient(conn),
 		DetailClient:   testing.NewDetailClient(conn),
 		MetadataClient: testing.NewMetadataClient(conn),
+		ChangeHealth:   testing.NewChangeHealthClient(conn),
+		HealthClient:   healthpb.NewHealthClient(conn),
 	}
 	reflectClient := newServerReflectionClient(ctx, conn)
 
@@ -93,16 +96,24 @@ LOOP:
 		}
 
 		switch services[si] {
-		case "testing.Status":
+		case testing.Status:
 			if err := client.runStatusClient(ctx); err != nil {
 				return err
 			}
-		case "testing.Detail":
+		case testing.Detail:
 			if err := client.runDetailClient(ctx); err != nil {
 				return err
 			}
-		case "testing.Metadata":
+		case testing.Metadata:
 			if err := client.runMetadataClient(ctx); err != nil {
+				return err
+			}
+		case testing.ChangeHealth:
+			if err := client.runChangeHealth(ctx); err != nil {
+				return err
+			}
+		case "grpc.health.v1.Health":
+			if err := client.runHealthClient(ctx); err != nil {
 				return err
 			}
 		default:
@@ -120,6 +131,8 @@ type Client struct {
 	StatusClient   testing.StatusClient
 	DetailClient   testing.DetailClient
 	MetadataClient testing.MetadataClient
+	ChangeHealth   testing.ChangeHealthClient
+	HealthClient   healthpb.HealthClient
 }
 
 var statuses = []testing.StatusGetRequest_Code{
@@ -221,6 +234,45 @@ func (c *Client) runMetadataClient(ctx context.Context) error {
 		loggingDetails(err)
 	} else {
 		log.Info().Interface("response", resp).Msg("success")
+	}
+	return nil
+}
+
+var healthStatus = []testing.SetRequest_HealthCheckStatus{
+	testing.SetRequest_UNKNOWN,
+	testing.SetRequest_SERVING,
+	testing.SetRequest_NOT_SERVING,
+	testing.SetRequest_SERVICE_UNKNOWN,
+}
+
+func (c *Client) runChangeHealth(ctx context.Context) error {
+	idx, err := fuzzyfinder.Find(healthStatus, func(i int) string {
+		return healthStatus[i].String()
+	})
+	if err != nil {
+		if errors.Is(err, fuzzyfinder.ErrAbort) {
+			return nil
+		}
+		return errors.WithStack(err)
+	}
+	resp, err := c.ChangeHealth.Set(ctx, &testing.SetRequest{Status: healthStatus[idx]})
+	if err != nil {
+		loggingDetails(err)
+	} else {
+		log.Info().Interface("response", resp).Msg("success")
+	}
+	return nil
+}
+
+func (c *Client) runHealthClient(ctx context.Context) error {
+	req := &healthpb.HealthCheckRequest{
+		Service: testing.ChangeHealth,
+	}
+	resp, err := c.HealthClient.Check(ctx, req)
+	if err != nil {
+		loggingDetails(err)
+	} else {
+		log.Info().Stringer("response", resp.Status).Msg("success")
 	}
 	return nil
 }

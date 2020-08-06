@@ -12,6 +12,8 @@ import (
 	"github.com/Code-Hex/testing-grpc/internal/testing"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -52,10 +54,19 @@ func run(ctx context.Context) error {
 
 func newServer() *grpc.Server {
 	srv := grpc.NewServer()
-	// enable reflection
-	reflection.Register(srv)
+
+	// health check service
+	healthcheck := health.NewServer()
+	healthpb.RegisterHealthServer(srv, healthcheck)
+
+	// register gRPC services
 	testing.RegisterStatusServer(srv, &Status{})
 	testing.RegisterDetailServer(srv, &Detail{})
 	testing.RegisterMetadataServer(srv, &Metadata{})
+	testing.RegisterChangeHealthServer(srv, newChangeHealth(healthcheck))
+
+	// enable reflection
+	reflection.Register(srv)
+
 	return srv
 }

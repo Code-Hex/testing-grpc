@@ -74,3 +74,19 @@ message MetadataGetResponse {
   }
   repeated Entry metadata = 1;
 }
+
+service ChangeHealth {
+  rpc Set(SetRequest) returns (SetResponse);
+}
+
+message SetRequest {
+  enum HealthCheckStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+    SERVICE_UNKNOWN = 3;
+  }
+  HealthCheckStatus status = 1;
+}
+
+message SetResponse {}
