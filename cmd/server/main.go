@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Code-Hex/testing-grpc/internal/test"
+	"github.com/Code-Hex/testing-grpc/internal/testing"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -53,7 +53,7 @@ func newServer() *grpc.Server {
 	srv := grpc.NewServer()
 	// enable reflection
 	reflection.Register(srv)
-	test.RegisterStatusServer(srv, &Status{})
-	test.RegisterDetailServer(srv, &Detail{})
+	testing.RegisterStatusServer(srv, &Status{})
+	testing.RegisterDetailServer(srv, &Detail{})
 	return srv
 }

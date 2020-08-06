@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Code-Hex/testing-grpc/internal/test"
+	"github.com/Code-Hex/testing-grpc/internal/testing"
 	"github.com/Songmu/prompter"
 	grpczerolog "github.com/cheapRoc/grpc-zerolog"
 	"github.com/jhump/protoreflect/grpcreflect"
@@ -50,8 +50,8 @@ func run(ctx context.Context) error {
 	}
 
 	client := &Client{
-		StatusClient: test.NewStatusClient(conn),
-		DetailClient: test.NewDetailClient(conn),
+		StatusClient: testing.NewStatusClient(conn),
+		DetailClient: testing.NewDetailClient(conn),
 	}
 	reflectClient := newServerReflectionClient(ctx, conn)
 
@@ -90,11 +90,11 @@ LOOP:
 		}
 
 		switch services[si] {
-		case "test.Status":
+		case "testing.Status":
 			if err := client.runStatusClient(ctx); err != nil {
 				return err
 			}
-		case "test.Detail":
+		case "testing.Detail":
 			if err := client.runDetailClient(ctx); err != nil {
 				return err
 			}
@@ -110,28 +110,28 @@ LOOP:
 }
 
 type Client struct {
-	StatusClient test.StatusClient
-	DetailClient test.DetailClient
+	StatusClient testing.StatusClient
+	DetailClient testing.DetailClient
 }
 
-var statuses = []test.StatusGetRequest_Code{
-	test.StatusGetRequest_OK,
-	test.StatusGetRequest_CANCELED,
-	test.StatusGetRequest_UNKNOWN,
-	test.StatusGetRequest_INVALIDARGUMENT,
-	test.StatusGetRequest_DEADLINE_EXCEEDED,
-	test.StatusGetRequest_NOT_FOUND,
-	test.StatusGetRequest_ALREADY_EXISTS,
-	test.StatusGetRequest_PERMISSION_DENIED,
-	test.StatusGetRequest_RESOURCE_EXHAUSTED,
-	test.StatusGetRequest_FAILED_PRECONDITION,
-	test.StatusGetRequest_ABORTED,
-	test.StatusGetRequest_OUT_OF_RANGE,
-	test.StatusGetRequest_UNIMPLEMENTED,
-	test.StatusGetRequest_INTERNAL,
-	test.StatusGetRequest_UNAVAILABLE,
-	test.StatusGetRequest_DATALOSS,
-	test.StatusGetRequest_UNAUTHENTICATED,
+var statuses = []testing.StatusGetRequest_Code{
+	testing.StatusGetRequest_OK,
+	testing.StatusGetRequest_CANCELED,
+	testing.StatusGetRequest_UNKNOWN,
+	testing.StatusGetRequest_INVALIDARGUMENT,
+	testing.StatusGetRequest_DEADLINE_EXCEEDED,
+	testing.StatusGetRequest_NOT_FOUND,
+	testing.StatusGetRequest_ALREADY_EXISTS,
+	testing.StatusGetRequest_PERMISSION_DENIED,
+	testing.StatusGetRequest_RESOURCE_EXHAUSTED,
+	testing.StatusGetRequest_FAILED_PRECONDITION,
+	testing.StatusGetRequest_ABORTED,
+	testing.StatusGetRequest_OUT_OF_RANGE,
+	testing.StatusGetRequest_UNIMPLEMENTED,
+	testing.StatusGetRequest_INTERNAL,
+	testing.StatusGetRequest_UNAVAILABLE,
+	testing.StatusGetRequest_DATALOSS,
+	testing.StatusGetRequest_UNAUTHENTICATED,
 }
 
 func (c *Client) runStatusClient(ctx context.Context) error {
@@ -144,7 +144,7 @@ func (c *Client) runStatusClient(ctx context.Context) error {
 		}
 		return errors.WithStack(err)
 	}
-	req := &test.StatusGetRequest{
+	req := &testing.StatusGetRequest{
 		Code: statuses[idx],
 	}
 	resp, err := c.StatusClient.Get(ctx, req)
@@ -156,19 +156,19 @@ func (c *Client) runStatusClient(ctx context.Context) error {
 	return nil
 }
 
-var details = []test.DetailGetRequest_Code{
-	test.DetailGetRequest_OK,
-	test.DetailGetRequest_RETRY_INFO,
-	test.DetailGetRequest_DEBUG_INFO,
-	test.DetailGetRequest_QUOTA_FAILURE,
-	test.DetailGetRequest_ERROR_INFO,
-	test.DetailGetRequest_PRECONDITION_FAILURE,
-	test.DetailGetRequest_BAD_REQUEST,
-	test.DetailGetRequest_REQUEST_INFO,
-	test.DetailGetRequest_RESOURCE_INFO,
-	test.DetailGetRequest_HELP,
-	test.DetailGetRequest_LOCALIZED_MESSAGE,
-	test.DetailGetRequest_COMBINED_ALL,
+var details = []testing.DetailGetRequest_Code{
+	testing.DetailGetRequest_OK,
+	testing.DetailGetRequest_RETRY_INFO,
+	testing.DetailGetRequest_DEBUG_INFO,
+	testing.DetailGetRequest_QUOTA_FAILURE,
+	testing.DetailGetRequest_ERROR_INFO,
+	testing.DetailGetRequest_PRECONDITION_FAILURE,
+	testing.DetailGetRequest_BAD_REQUEST,
+	testing.DetailGetRequest_REQUEST_INFO,
+	testing.DetailGetRequest_RESOURCE_INFO,
+	testing.DetailGetRequest_HELP,
+	testing.DetailGetRequest_LOCALIZED_MESSAGE,
+	testing.DetailGetRequest_COMBINED_ALL,
 }
 
 func (c *Client) runDetailClient(ctx context.Context) error {
@@ -181,7 +181,7 @@ func (c *Client) runDetailClient(ctx context.Context) error {
 		}
 		return errors.WithStack(err)
 	}
-	req := &test.DetailGetRequest{
+	req := &testing.DetailGetRequest{
 		Code: details[idx],
 	}
 	resp, err := c.DetailClient.Get(ctx, req)

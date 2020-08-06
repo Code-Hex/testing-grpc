@@ -13,8 +13,8 @@ build:
 
 proto/compile:
 	mkdir -p $(OUTPUT_DIR)
-	protoc -I. --go_out=plugins=grpc:$(OUTPUT_DIR) internal/test/*.proto
-	cp $(OUTPUT_DIR)/$(PKG)/internal/test/*.go internal/test/
+	protoc -I. --go_out=plugins=grpc:$(OUTPUT_DIR) internal/testing/*.proto
+	cp $(OUTPUT_DIR)/$(PKG)/internal/testing/*.go internal/testing/
 
 proto/clean:
-	rm -f internal/testdata/*.pb.go
+	rm -f internal/testing/*.pb.go
