@@ -20,12 +20,14 @@ If you want to change port, you can change the environment variable of `PORT`. a
 
 ## supported
 
-- [x] status
-- [x] error details
-- [x] metadata
-- [x] [health check](https://github.com/grpc/grpc-go/tree/master/examples/features/health)
-- [ ] interceptor
-- [ ] stats
+- Unary
+  - [x] status
+  - [x] error details
+  - [x] metadata
+  - [x] [health check](https://github.com/grpc/grpc-go/tree/master/examples/features/health)
+  - [ ] cancel, timeout
+  - [ ] interceptor
+  - [ ] stats
 
 ## gRPC documents
 
