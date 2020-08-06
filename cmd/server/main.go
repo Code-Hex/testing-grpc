@@ -34,6 +34,7 @@ func run(ctx context.Context) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+	log.Printf("Running server on port => :%s\n", port)
 
 	go srv.Serve(ln)
 
