@@ -54,5 +54,6 @@ func newServer() *grpc.Server {
 	// enable reflection
 	reflection.Register(srv)
 	test.RegisterStatusServer(srv, &Status{})
+	test.RegisterDetailServer(srv, &Detail{})
 	return srv
 }

@@ -34,3 +34,30 @@ message StatusGetRequest {
 message StatusGetResponse {
   string msg = 1;
 }
+
+service Detail {
+  rpc Get(DetailGetRequest) returns (DetailGetResponse);
+}
+
+message DetailGetRequest {
+  enum Code {
+    OK = 0;
+    RETRY_INFO = 1;
+    DEBUG_INFO = 2;
+    QUOTA_FAILURE = 3;
+    ERROR_INFO = 4;
+    PRECONDITION_FAILURE = 5;
+    BAD_REQUEST = 6;
+    REQUEST_INFO = 7;
+    RESOURCE_INFO = 8;
+    HELP = 9;
+    LOCALIZED_MESSAGE = 10;
+
+    COMBINED_ALL = 20;
+  }
+  Code code = 1;
+}
+
+message DetailGetResponse {
+  string msg = 1;
+}
