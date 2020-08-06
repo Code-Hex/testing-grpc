@@ -78,9 +78,6 @@ LOOP:
 		// List gRPC services
 		services, err := reflectClient.ListServices()
 		if err != nil {
-			if errors.Is(err, fuzzyfinder.ErrAbort) {
-				return nil
-			}
 			return errors.WithStack(err)
 		}
 
@@ -89,6 +86,9 @@ LOOP:
 			return services[i]
 		})
 		if err != nil {
+			if errors.Is(err, fuzzyfinder.ErrAbort) {
+				return nil
+			}
 			return errors.WithStack(err)
 		}
 
