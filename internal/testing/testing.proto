@@ -4,6 +4,8 @@ package testing;
 
 option go_package = "github.com/Code-Hex/testing-grpc/internal/testing;testing";
 
+import "google/protobuf/empty.proto";
+
 service Status {
   rpc Get(StatusGetRequest) returns (StatusGetResponse);
 }
@@ -62,10 +64,8 @@ message DetailGetResponse {
 }
 
 service Metadata {
-  rpc Get(MetadataGetRequest) returns (MetadataGetResponse);
+  rpc Get(google.protobuf.Empty) returns (MetadataGetResponse);
 }
-
-message MetadataGetRequest {}
 
 message MetadataGetResponse {
   message Entry {
@@ -76,7 +76,7 @@ message MetadataGetResponse {
 }
 
 service ChangeHealth {
-  rpc Set(SetRequest) returns (SetResponse);
+  rpc Set(SetRequest) returns (google.protobuf.Empty);
 }
 
 message SetRequest {
@@ -88,5 +88,3 @@ message SetRequest {
   }
   HealthCheckStatus status = 1;
 }
-
-message SetResponse {}

@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/Code-Hex/testing-grpc/internal/testing"
+	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -14,7 +15,7 @@ var _ testing.MetadataServer = (*Metadata)(nil)
 
 type Metadata struct{}
 
-func (m *Metadata) Get(ctx context.Context, req *testing.MetadataGetRequest) (*testing.MetadataGetResponse, error) {
+func (m *Metadata) Get(ctx context.Context, _ *empty.Empty) (*testing.MetadataGetResponse, error) {
 	// https://github.com/grpc/grpc-go/blob/master/Documentation/grpc-metadata.md#retrieving-metadata-from-context
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

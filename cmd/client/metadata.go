@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Code-Hex/testing-grpc/internal/testing"
 	"github.com/Songmu/prompter"
+	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -24,7 +24,7 @@ func (c *Client) runMetadataClient(ctx context.Context) error {
 		}
 	}
 	ctx = metadata.AppendToOutgoingContext(ctx, md...)
-	resp, err := c.MetadataClient.Get(ctx, &testing.MetadataGetRequest{})
+	resp, err := c.MetadataClient.Get(ctx, &empty.Empty{})
 	if err != nil {
 		loggingDetails(err)
 	} else {
