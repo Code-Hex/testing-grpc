@@ -67,18 +67,18 @@ func run(ctx context.Context) error {
 		cancel()
 	}()
 
+	// List gRPC services
+	services, err := reflectClient.ListServices()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
 LOOP:
 	for {
 		select {
 		case <-ctx.Done():
 			break LOOP
 		default:
-		}
-
-		// List gRPC services
-		services, err := reflectClient.ListServices()
-		if err != nil {
-			return errors.WithStack(err)
 		}
 
 		// grpc.reflection.v1alpha.ServerReflection
