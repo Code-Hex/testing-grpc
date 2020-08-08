@@ -56,17 +56,22 @@ func run(ctx context.Context) error {
 	conn, err := grpc.Dial(":"+port,
 		grpc.WithInsecure(),
 		grpc.WithStatsHandler(stats.NewHandler(log)),
+		grpc.WithChainUnaryInterceptor(
+			DoLogServerInterceptor("A"),
+			DoLogServerInterceptor("B"),
+		),
 	)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
 	client := &Client{
-		StatusClient:   testing.NewStatusClient(conn),
-		DetailClient:   testing.NewDetailClient(conn),
-		MetadataClient: testing.NewMetadataClient(conn),
-		ChangeHealth:   testing.NewChangeHealthClient(conn),
-		HealthClient:   healthpb.NewHealthClient(conn),
+		StatusClient:      testing.NewStatusClient(conn),
+		DetailClient:      testing.NewDetailClient(conn),
+		MetadataClient:    testing.NewMetadataClient(conn),
+		ChangeHealth:      testing.NewChangeHealthClient(conn),
+		HealthClient:      healthpb.NewHealthClient(conn),
+		InterceptorClient: testing.NewInterceptorClient(conn),
 	}
 	reflectClient := newServerReflectionClient(ctx, conn)
 
@@ -125,6 +130,8 @@ LOOP:
 			if err := client.runHealthClient(ctx); err != nil {
 				return err
 			}
+		case testing.Interceptor:
+			client.runInterceptorClient(ctx)
 		default:
 			continue LOOP
 		}
@@ -137,11 +144,12 @@ LOOP:
 }
 
 type Client struct {
-	StatusClient   testing.StatusClient
-	DetailClient   testing.DetailClient
-	MetadataClient testing.MetadataClient
-	ChangeHealth   testing.ChangeHealthClient
-	HealthClient   healthpb.HealthClient
+	StatusClient      testing.StatusClient
+	DetailClient      testing.DetailClient
+	MetadataClient    testing.MetadataClient
+	ChangeHealth      testing.ChangeHealthClient
+	HealthClient      healthpb.HealthClient
+	InterceptorClient testing.InterceptorClient
 }
 
 func newServerReflectionClient(ctx context.Context, conn *grpc.ClientConn) *grpcreflect.Client {

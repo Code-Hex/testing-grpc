@@ -5,4 +5,5 @@ const (
 	Detail       = "testing.Detail"
 	Metadata     = "testing.Metadata"
 	ChangeHealth = "testing.ChangeHealth"
+	Interceptor  = "testing.Interceptor"
 )

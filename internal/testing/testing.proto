@@ -88,3 +88,15 @@ message SetRequest {
   }
   HealthCheckStatus status = 1;
 }
+
+service Interceptor {
+  rpc Echo(EchoRequest) returns (EchoResponse);
+}
+
+message EchoRequest {
+  string msg = 1;
+}
+
+message EchoResponse {
+  string msg = 1;
+}

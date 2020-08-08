@@ -74,6 +74,10 @@ func run(ctx context.Context) error {
 func newServer() *grpc.Server {
 	srv := grpc.NewServer(
 		grpc.StatsHandler(stats.NewHandler(log)),
+		grpc.ChainUnaryInterceptor(
+			DoLogServerInterceptor("A"),
+			DoLogServerInterceptor("B"),
+		),
 	)
 
 	// health check service
@@ -85,6 +89,7 @@ func newServer() *grpc.Server {
 	testing.RegisterDetailServer(srv, &Detail{})
 	testing.RegisterMetadataServer(srv, &Metadata{})
 	testing.RegisterChangeHealthServer(srv, newChangeHealth(healthcheck))
+	testing.RegisterInterceptorServer(srv, &Interceptor{})
 
 	// enable reflection
 	reflection.Register(srv)

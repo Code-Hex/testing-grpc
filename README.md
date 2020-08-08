@@ -26,7 +26,7 @@ If you want to change port, you can change the environment variable of `PORT`. a
   - [x] metadata
   - [x] [health check](https://github.com/grpc/grpc-go/tree/master/examples/features/health)
   - [ ] cancel, timeout
-  - [ ] interceptor
+  - [x] interceptor
   - [x] stats
     - If you want to disable logging, please set `LOG_LEVEL` to `INFO`. see `.env` file.
 
