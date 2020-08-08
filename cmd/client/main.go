@@ -29,7 +29,6 @@ var log zerolog.Logger
 func init() {
 	log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
 	grpclog.SetLoggerV2(grpczerolog.New(log))
-	fmt.Println()
 }
 
 func main() {

@@ -3,19 +3,28 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/Code-Hex/testing-grpc/internal/testing"
+	grpczerolog "github.com/cheapRoc/grpc-zerolog"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
+
+var log zerolog.Logger
+
+func init() {
+	log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	grpclog.SetLoggerV2(grpczerolog.New(log))
+}
 
 func main() {
 	if err := run(context.Background()); err != nil {
@@ -32,11 +41,11 @@ func run(ctx context.Context) error {
 		port = "3000"
 	}
 
-	ln, err := net.Listen("tcp", ":"+port)
+	ln, err := net.Listen("tcp", "localhost:"+port)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	log.Printf("Running server on port => :%s\n", port)
+	log.Info().Str("port", port).Msg("Running server")
 
 	go srv.Serve(ln)
 
@@ -44,7 +53,7 @@ func run(ctx context.Context) error {
 	signal.Notify(sigCh, syscall.SIGTERM, os.Interrupt)
 	select {
 	case <-sigCh:
-		log.Println("received SIGTERM, exiting server gracefully")
+		log.Info().Msg("received SIGTERM, exiting server gracefully")
 	case <-ctx.Done():
 	}
 	go srv.GracefulStop()
