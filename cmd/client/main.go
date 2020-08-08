@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Code-Hex/testing-grpc/internal/level"
+	"github.com/Code-Hex/testing-grpc/internal/stats"
 	"github.com/Code-Hex/testing-grpc/internal/testing"
 	"github.com/Songmu/prompter"
 	grpczerolog "github.com/cheapRoc/grpc-zerolog"
@@ -27,7 +29,14 @@ import (
 var log zerolog.Logger
 
 func init() {
-	log = zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	log = zerolog.New(
+		zerolog.ConsoleWriter{
+			Out: os.Stderr,
+		}).
+		With().
+		Timestamp().
+		Logger().
+		Level(level.Log(os.Getenv("LOG_LEVEL")))
 	grpclog.SetLoggerV2(grpczerolog.New(log))
 }
 
@@ -44,7 +53,10 @@ func run(ctx context.Context) error {
 		port = "3000"
 	}
 
-	conn, err := grpc.Dial(":"+port, grpc.WithInsecure())
+	conn, err := grpc.Dial(":"+port,
+		grpc.WithInsecure(),
+		grpc.WithStatsHandler(stats.NewHandler(log)),
+	)
 	if err != nil {
 		return errors.WithStack(err)
 	}
