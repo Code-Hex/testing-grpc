@@ -33,7 +33,9 @@ If you want to change port, you can change the environment variable of `PORT`. a
 
 ## gRPC documents
 
+- [gRPC Concepts Overview](https://github.com/grpc/grpc/blob/master/CONCEPTS.md)
 - [Error Handling – gRPC](https://grpc.io/docs/guides/error/)
+- [grpc/grpc documents](https://github.com/grpc/grpc/tree/master/doc)
 - [go-grpc Learn More](https://github.com/grpc/grpc-go#learn-more)
   - [Low-level technical docs](https://github.com/grpc/grpc-go/tree/master/Documentation)
   - [features example](https://github.com/grpc/grpc-go/tree/master/examples/features)
