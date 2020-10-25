@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/Songmu/prompter v0.3.0
 	github.com/cheapRoc/grpc-zerolog v0.0.0-20180425150930-27ca9d023ead
+	github.com/fullstorydev/grpcurl v1.7.0 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/jhump/protoreflect v1.7.0
 	github.com/ktr0731/go-fuzzyfinder v0.2.1
