@@ -90,6 +90,7 @@ func newServer() *grpc.Server {
 	testing.RegisterMetadataServer(srv, &Metadata{})
 	testing.RegisterChangeHealthServer(srv, newChangeHealth(healthcheck))
 	testing.RegisterInterceptorServer(srv, &Interceptor{})
+	testing.RegisterStreamServer(srv, &Stream{})
 
 	// enable reflection
 	reflection.Register(srv)

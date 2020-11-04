@@ -72,6 +72,7 @@ func run(ctx context.Context) error {
 		ChangeHealth:      testing.NewChangeHealthClient(conn),
 		HealthClient:      healthpb.NewHealthClient(conn),
 		InterceptorClient: testing.NewInterceptorClient(conn),
+		StreamClient:      testing.NewStreamClient(conn),
 	}
 	reflectClient := newServerReflectionClient(ctx, conn)
 
@@ -132,6 +133,8 @@ LOOP:
 			}
 		case testing.Interceptor:
 			client.runInterceptorClient(ctx)
+		case testing.Stream:
+			client.runServerStream(ctx)
 		default:
 			continue LOOP
 		}
@@ -150,6 +153,7 @@ type Client struct {
 	ChangeHealth      testing.ChangeHealthClient
 	HealthClient      healthpb.HealthClient
 	InterceptorClient testing.InterceptorClient
+	StreamClient      testing.StreamClient
 }
 
 func newServerReflectionClient(ctx context.Context, conn *grpc.ClientConn) *grpcreflect.Client {
