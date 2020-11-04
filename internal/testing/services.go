@@ -6,4 +6,5 @@ const (
 	Metadata     = "testing.Metadata"
 	ChangeHealth = "testing.ChangeHealth"
 	Interceptor  = "testing.Interceptor"
+	Stream       = "testing.Stream"
 )

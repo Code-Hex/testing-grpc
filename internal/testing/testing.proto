@@ -100,3 +100,15 @@ message EchoRequest {
 message EchoResponse {
   string msg = 1;
 }
+
+service Stream {
+  rpc ServerStream(ServerStreamRequest) returns (stream ServerStreamResponse);
+}
+
+message ServerStreamRequest {
+  string duration = 1;
+}
+
+message ServerStreamResponse {
+  string msg = 1;
+}

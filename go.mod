@@ -12,4 +12,5 @@ require (
 	github.com/rs/zerolog v1.19.0
 	google.golang.org/genproto v0.0.0-20200804151602-45615f50871c
 	google.golang.org/grpc v1.31.0
+	google.golang.org/protobuf v1.24.0
 )
