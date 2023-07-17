@@ -1,3 +1,0 @@
-[submodule "third_party/protocolbuffers"]
-	path = third_party/protocolbuffers
-	url = git@github.com:protocolbuffers/protobuf.git
