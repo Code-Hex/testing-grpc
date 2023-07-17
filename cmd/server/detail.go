@@ -8,12 +8,14 @@ import (
 	"strings"
 
 	"github.com/Code-Hex/testing-grpc/internal/testing"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/pkg/errors"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/runtime/protoiface"
+	"google.golang.org/protobuf/runtime/protoimpl"
+	durationpb "google.golang.org/protobuf/types/known/durationpb"
 )
 
 var _ testing.DetailServer = (*Detail)(nil)
@@ -31,7 +33,7 @@ func (d *Detail) Get(ctx context.Context, req *testing.DetailGetRequest) (*testi
 
 var details = map[testing.DetailGetRequest_Code]proto.Message{
 	testing.DetailGetRequest_RETRY_INFO: &errdetails.RetryInfo{
-		RetryDelay: &duration.Duration{
+		RetryDelay: &durationpb.Duration{
 			Seconds: 2,
 			Nanos:   100,
 		},
@@ -174,7 +176,11 @@ func stackTraces() []string {
 }
 
 func makeDetailsErr(code codes.Code, msg string, d ...proto.Message) error {
-	st, err := status.New(code, msg).WithDetails(d...)
+	detailsV1 := make([]protoiface.MessageV1, len(d))
+	for i, m := range d {
+		detailsV1[i] = protoimpl.X.ProtoMessageV1Of(m)
+	}
+	st, err := status.New(code, msg).WithDetails(detailsV1...)
 	if err != nil {
 		return errors.WithStack(err)
 	}

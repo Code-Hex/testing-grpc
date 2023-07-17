@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/Code-Hex/testing-grpc/internal/testing"
-	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 type ChangeHealth struct {
@@ -23,12 +23,12 @@ func newChangeHealth(healthcheck *health.Server) *ChangeHealth {
 
 var _ testing.ChangeHealthServer = (*ChangeHealth)(nil)
 
-func (c *ChangeHealth) Set(ctx context.Context, req *testing.SetRequest) (*empty.Empty, error) {
+func (c *ChangeHealth) Set(ctx context.Context, req *testing.SetRequest) (*emptypb.Empty, error) {
 	c.healthcheck.SetServingStatus(
 		testing.ChangeHealth,
 		convToServingStatus(req.Status),
 	)
-	return &empty.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 func convToServingStatus(s testing.SetRequest_HealthCheckStatus) healthpb.HealthCheckResponse_ServingStatus {
